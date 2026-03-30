@@ -20,6 +20,7 @@ from tensorflow.compiler.tests import xla_test
 from tensorflow.python import pywrap_sanitizers
 from tensorflow.python.framework import constant_op
 from tensorflow.python.framework import dtypes
+from tensorflow.python.framework import test_util
 from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import array_ops_stack  # pylint: disable=g-direct-tensorflow-import
 from tensorflow.python.ops import gen_array_ops
@@ -304,6 +305,7 @@ class ConcatTest(xla_test.XLATestCase):
 
   # The purpose of this is to ensure that XLA on GPU will not run out of memory
   # with too many arguments.
+  @test_util.set_xla_env_flag(flag="--xla_gpu_redzone_padding_bytes=0")
   def testConcatLargeNumberOfTensors(self):
     if "CPU" in self.device:
       self.skipTest("This test can time out on CPU, so we will just allow "

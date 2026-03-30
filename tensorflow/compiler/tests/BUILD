@@ -682,6 +682,7 @@ tf_xla_py_strict_test(
         "//tensorflow/python:pywrap_sanitizers",
         "//tensorflow/python/framework:constant_op",
         "//tensorflow/python/framework:dtypes",
+        "//tensorflow/python/framework:test_lib",
         "//tensorflow/python/ops:array_ops",
         "//tensorflow/python/ops:array_ops_gen",
         "//tensorflow/python/ops:array_ops_stack",
