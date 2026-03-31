@@ -61,3 +61,11 @@ jobs:
           TFCI: ${{ inputs.tfci }}
           TFCI_GITHUB_ACTIONS: true
         run: ./ci/official/pycpp.sh
+
+      - name: Upload Profile
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: profile-${{ inputs.runner }}-${{ github.run_id }}
+          path: build_output/profile.json.gz
+          if-no-files-found: warn
