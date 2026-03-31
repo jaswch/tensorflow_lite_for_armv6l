@@ -143,7 +143,7 @@ class FallbackBatchResource : public tensorflow::serving::BatchResourceBase {
         exec_ctx->request_ctx()
             ->GetDataIfExists<tfd::KernelFallbackCompatRequestState>();
     if (!fallback_request_state) {
-      return tensorflow::errors::Internal(
+      return absl::InternalError(
           "KernelFallbackCompatRequestState not found in RequestContext.");
     }
 
@@ -183,7 +183,7 @@ class FallbackBatchResource : public tensorflow::serving::BatchResourceBase {
         exec_ctx->request_ctx()
             ->GetDataIfExists<tfd::KernelFallbackCompatRequestState>();
     if (!fallback_request_state) {
-      return tensorflow::errors::Internal(
+      return absl::InternalError(
           "KernelFallbackCompatRequestState not found in RequestContext.");
     }
 
@@ -274,7 +274,7 @@ absl::Status SetUpKernelFallbackCompatRequestContextForBatch(
   const auto* src_fallback_request_state =
       src_req_ctx.GetDataIfExists<tfd::KernelFallbackCompatRequestState>();
   if (!src_fallback_request_state) {
-    return tensorflow::errors::Internal(
+    return absl::InternalError(
         "KernelFallbackCompatRequestState not found in RequestContext.");
   }
 
@@ -313,8 +313,7 @@ absl::StatusOr<RCReference<tfrt::RequestContext>> SetUpRequestContext(
 
   auto expected_req_ctx = std::move(request_context_builder).build();
   if (!expected_req_ctx) {
-    return tensorflow::errors::Internal(
-        tfrt::StrCat(expected_req_ctx.takeError()));
+    return absl::InternalError(tfrt::StrCat(expected_req_ctx.takeError()));
   }
 
   return std::move(expected_req_ctx.get());
@@ -401,7 +400,7 @@ void FallbackBatchResource::ProcessFuncBatchImpl(
       for (auto* error : errors) {
         os << error->message() << ";\n";
       }
-      final_status = errors::Internal(std::move(os.str()));
+      final_status = absl::InternalError(os.str());
     }
   }
   done(final_status);
