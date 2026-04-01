@@ -181,7 +181,8 @@ class SignatureRunner {
   ///
   /// NOTE: User needs to call AllocateTensors() after this.
   /// Invalid/insufficient buffers will cause an error during AllocateTensors or
-  /// Invoke (in case of dynamic shapes in the graph).
+  /// Invoke (in case of dynamic shapes in the graph). Thus we explicitly clear
+  /// the custom allocation for input tensors.
   ///
   /// Parameters should satisfy the following conditions:
   /// 1. tensor->allocation_type == kTfLiteArenaRw or kTfLiteArenaRwPersistent
@@ -206,7 +207,8 @@ class SignatureRunner {
   ///
   /// NOTE: User needs to call AllocateTensors() after this.
   /// Invalid/insufficient buffers will cause an error during AllocateTensors or
-  /// Invoke (in case of dynamic shapes in the graph).
+  /// Invoke (in case of dynamic shapes in the graph). Thus we explicitly clear
+  /// the custom allocation for output tensors.
   ///
   /// Parameters should satisfy the following conditions:
   /// 1. tensor->allocation_type == kTfLiteArenaRw or kTfLiteArenaRwPersistent
@@ -267,6 +269,13 @@ class SignatureRunner {
   friend class ::tflite::SignatureRunnerHelper;
   friend class ::tflite::SignatureRunnerJNIHelper;
   friend class ::tflite::TensorHandle;
+
+  /// \brief Clears all custom memory allocations in the signature runner.
+  /// \warning This is an experimental API and subject to change. \n
+  TfLiteStatus ClearCustomAllocations() {
+    subgraph_->ClearCustomAllocations();
+    return kTfLiteOk;
+  }
 
   // The SignatureDef object is owned by the interpreter.
   const internal::SignatureDef* signature_def_;

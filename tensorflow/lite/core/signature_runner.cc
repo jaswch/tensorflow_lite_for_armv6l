@@ -109,6 +109,7 @@ TfLiteStatus SignatureRunner::ResizeInputTensor(
     subgraph_->ReportError("Input name %s was not found", input_name);
     return kTfLiteError;
   }
+  TF_LITE_ENSURE_STATUS(ClearCustomAllocations());
   return subgraph_->ResizeInputTensor(it->second, new_size);
 }
 
@@ -119,6 +120,7 @@ TfLiteStatus SignatureRunner::ResizeInputTensorStrict(
     subgraph_->ReportError("Input name %s was not found", input_name);
     return kTfLiteError;
   }
+  TF_LITE_ENSURE_STATUS(ClearCustomAllocations());
   return subgraph_->ResizeInputTensorStrict(it->second, new_size);
 }
 
