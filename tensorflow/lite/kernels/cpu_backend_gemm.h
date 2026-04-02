@@ -22,7 +22,7 @@ limitations under the License.
 #include "tensorflow/lite/kernels/cpu_backend_context.h"
 #include "tensorflow/lite/kernels/cpu_backend_gemm_custom_gemv.h"
 #include "tensorflow/lite/kernels/cpu_backend_gemm_params.h"
-#include "tensorflow/lite/kernels/cpu_backend_gemm_ruy.h"
+#include "tensorflow/lite/kernels/cpu_backend_gemm_reference.h"
 
 #ifndef TFLITE_WITH_RUY
 #include "tensorflow/lite/kernels/cpu_backend_gemm_eigen.h"
@@ -66,8 +66,9 @@ struct GemmImpl : detail::GemmImplX86<LhsScalar, RhsScalar, AccumScalar,
  */
 template <typename LhsScalar, typename RhsScalar, typename AccumScalar,
           typename DstScalar, QuantizationFlavor quantization_flavor>
-struct GemmImpl : detail::GemmImplUsingRuy<LhsScalar, RhsScalar, AccumScalar,
-                                           DstScalar, quantization_flavor> {};
+struct GemmImpl
+    : detail::GemmImplUsingReference<LhsScalar, RhsScalar, AccumScalar,
+                                     DstScalar, quantization_flavor> {};
 
 #if !defined(TFLITE_WITH_RUY)
 
@@ -86,20 +87,20 @@ struct GemmImpl<SrcScalar, SrcScalar, std::int32_t, DstScalar,
 template <typename SrcScalar, QuantizationFlavor quantization_flavor>
 struct GemmImpl<SrcScalar, SrcScalar, std::int32_t, std::int8_t,
                 quantization_flavor>
-    : detail::GemmImplUsingRuy<SrcScalar, SrcScalar, std::int32_t, std::int8_t,
-                               quantization_flavor> {};
+    : detail::GemmImplUsingReference<SrcScalar, SrcScalar, std::int32_t,
+                                     std::int8_t, quantization_flavor> {};
 
 template <typename DstScalar, QuantizationFlavor quantization_flavor>
 struct GemmImpl<std::int8_t, std::int8_t, std::int32_t, DstScalar,
                 quantization_flavor>
-    : detail::GemmImplUsingRuy<std::int8_t, std::int8_t, std::int32_t,
-                               DstScalar, quantization_flavor> {};
+    : detail::GemmImplUsingReference<std::int8_t, std::int8_t, std::int32_t,
+                                     DstScalar, quantization_flavor> {};
 
 template <QuantizationFlavor quantization_flavor>
 struct GemmImpl<std::int8_t, std::int8_t, std::int32_t, std::int8_t,
                 quantization_flavor>
-    : detail::GemmImplUsingRuy<std::int8_t, std::int8_t, std::int32_t,
-                               std::int8_t, quantization_flavor> {};
+    : detail::GemmImplUsingReference<std::int8_t, std::int8_t, std::int32_t,
+                                     std::int8_t, quantization_flavor> {};
 #endif  // not GEMMLOWP_NEON
 
 /* Specializations using Eigen */
