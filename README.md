@@ -31,7 +31,7 @@ To compile this from scratch you must need to follow the prerequisites :
 
 Note :- This was done on a PC running Ubuntu 25.10 (Questing Quokka) 64-bit.
 
-1. Clone the source ```https://github.com/jaswch/tensorflow.git```
+1. Clone the source ```https://github.com/jaswch/tensorflow_lite_for_armv6l.git```
 2. It is recomended to use V2.16.1 ```git checkout v2.16.1```
 3. Enter the project directory ```cd tensorflow/```
 4. Now replace the contents of the docker file in ```/tensorflow/tensorflow/lite/tools/pip_package/Dockerfile.py3``` with the below code.
